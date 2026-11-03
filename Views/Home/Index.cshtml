@@ -1,0 +1,80 @@
+﻿@model bookstoreLab5.ViewModels.HomeViewModel
+
+<h1>Book Store</h1>
+
+@section Styles {
+    <style>
+        .book-card {
+            border: 1px solid black;
+            padding: 15px;
+            margin: 10px;
+            width: 250px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function confirmRemove() {
+            return confirm("Remove this book?");
+        }
+    </script>
+}
+
+<h2>Add Book</h2>
+
+<form method="post" action="/Home/AddBook">
+    <input type="text" name="title" placeholder="Book Title" required />
+
+    <input type="number" name="price" placeholder="Price" step="0.01" required />
+
+    <select name="authorId" required>
+        @foreach (var author in Model.Authors)
+        {
+            <option value="@author.Id">@author.Name</option>
+        }
+    </select>
+
+    <button type="submit">Add Book</button>
+</form>
+
+<hr />
+
+<h2>Add Author</h2>
+
+<form method="post" action="/Home/AddAuthor">
+    <input type="text" name="name" placeholder="Author Name" required />
+
+    <input type="text" name="country" placeholder="Country" required />
+
+    <button type="submit">Add Author</button>
+</form>
+
+<hr />
+
+<h2>Available Books</h2>
+
+@if (Model.Books.Count == 0)
+{
+    <p>No books available</p>
+}
+else
+{
+    @foreach (var book in Model.Books)
+    {
+        <div class="book-card">
+            <h3>@book.Title</h3>
+            <p>Author: @book.AuthorName</p>
+            <p>Price: @book.Price</p>
+
+            <form method="post"
+                  action="/Home/RemoveBook"
+                  onsubmit="return confirmRemove()">
+
+                <input type="hidden" name="id" value="@book.Id" />
+
+                <button type="submit">Remove</button>
+            </form>
+        </div>
+    }
+}
